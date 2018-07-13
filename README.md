@@ -52,6 +52,11 @@ Use :allow_blank for a "not recurring" option:
   f.select_recurring :current_existing_rule, nil, :allow_blank => true
 ```
 
+Use :data attribute to position the recurring select dialog inline (after the select input):
+
+```ruby
+  f.select_recurring :current_existing_rule, nil, { :allow_blank => true }, { data: { recurring_select_position: 'inline' } }
+```
 
 ### Additional Helpers
 
@@ -130,7 +135,15 @@ $.fn.recurring_select.options = {
   monthly: {
     show_week: [true, true, true, true, false, false] //display week 1, 2 .... Last
   }
+  until: true                                         //require until date
+  indefinite_until: true                              //until be set to indefinite
+  datepicker: {
+    firstDay: 1,  # 1 = monday, 0 = sunday
+    beforeShowDayFunction: ->
+  },
+  close_on_outside_click: true
 }
+
 ```
 
 ## Testing and Development

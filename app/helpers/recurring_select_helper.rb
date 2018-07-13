@@ -2,7 +2,7 @@ require "ice_cube"
 
 module RecurringSelectHelper
   module FormHelper
-    if Rails::VERSION::MAJOR == 4
+    if Rails::VERSION::MAJOR == 4 || Rails::VERSION::MAJOR == 5
       def select_recurring(object, method, default_schedules = nil, options = {}, html_options = {})
         RecurringSelectTag.new(object, method, self, default_schedules, options, html_options).render
       end
@@ -68,7 +68,7 @@ module RecurringSelectHelper
       return supplied_rule unless RecurringSelect.is_valid_rule?(supplied_rule)
 
       rule = RecurringSelect.dirty_hash_to_rule(supplied_rule)
-      ar = [rule.to_s, rule.to_hash.to_json]
+      ar = [rule.to_s, rule_as_json(rule)]
 
       if custom
         ar[0] << "*"
@@ -76,6 +76,14 @@ module RecurringSelectHelper
       end
 
       ar
+    end
+    
+    def rule_as_json(rule)
+      hash = rule.to_hash
+      if hash.delete(:until)
+        hash[:until] = rule.until_time.to_date
+      end
+      hash.to_json
     end
 
     def current_rule_in_defaults?(currently_selected_rule, default_schedules)
